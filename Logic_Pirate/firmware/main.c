@@ -525,13 +525,23 @@ static void user_init()
 static const char id_string[ 4 ] = { "1ALS" };
 
 // http://dangerousprototypes.com/docs/The_Logic_Sniffer%27s_extended_SUMP_protocol#Metadata_command
-static const char meta_info[] = { "\x01" "Logic Pirate ("
+static const char meta_info[] = {
+    "x01" "Logic Pirate" "x00"
+//  "x02" "" "x00"            //there is no FPGA firmware
+    "x03" "2015-09-05" "x00"  //PIC firmware version
+    "x20" "x00x00x00x08"  //8 probes
+    "x21" "x00x03xe8x00"  //256k sample memory
+//  "x22" "x00x00x00x00"  //there is no dynamic memory
 #if defined( OVERCLOCK )
-                                  "60"
+	"x23" "x03x93x87x00"  //60MHz maximum sample rate
 #else
-                                  "40"
+	"x23" "x02x62x5ax00"  //40MHz maximum sample rate
 #endif
-                                  " MHz)" "\x00" "\x02" "2013-06-25" "\x00" "\x00" };
+    "x24" "x00x00x00x02"  //protocol version 2
+    "x40" "x08"              //8 probes
+    "x41" "x02"              //protocol version 2
+    "x00"
+};
 static config_t config = { 0 };
 static bool do_fill_ram = false;
 static uint32_t delayed_fill_counter = 0;
